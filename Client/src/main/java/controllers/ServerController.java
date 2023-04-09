@@ -1,13 +1,22 @@
-import spiffyUrlManipulator
+package controllers;
 
-public class ServerController() {
-    private String rootURL = "http://zipcode.rocks:8085";
+//import spiffyUrlManipulator
+
+import models.Id;
+
+import javax.json.JsonString;
+import java.net.HttpURLConnection;
+
+public class ServerController {
+    private String rootURL = "http://zipcode.rocks:8085/ids";
 
     private ServerController svr = new ServerController();
 
-    private ServerController() {}
+    private ServerController() {
 
-    public static shared() {
+    }
+
+    public ServerController shared() {
         return svr;
     }
 
@@ -15,16 +24,19 @@ public class ServerController() {
         // url -> /ids/
         // send the server a get with url
         // return json from server
+        return null;
     }
-    public JsonString idPost(Id) {
+    public JsonString idPost(Id input) {
         // url -> /ids/
         // create json from Id
         // request
         // reply
         // return json
+        return null;
     }
-    public JsonString idPut(Id) {
+    public JsonString idPut(Id input) {
         // url -> /ids/
+        return null;
     }
 
 

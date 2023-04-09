@@ -68,18 +68,23 @@ public class SimpleShell {
 
                 // ids
                 if (list.contains("ids")) {
-                    String results = webber.get_ids();
+                    String results = urll.get_ids();
                     SimpleShell.prettyPrint(results);
                     continue;
                 }
 
                 // messages
                 if (list.contains("messages")) {
-                    String results = webber.get_messages();
+                    String results = urll.get_messages();
                     SimpleShell.prettyPrint(results);
                     continue;
                 }
                 // you need to add a bunch more.
+//                if (list.contains("name")) {
+//                    String results = urll.get_name();
+//                    SimpleShell.prettyPrint(results);
+//                    continue;
+//                }
 
                 //!! command returns the last command in history
                 if (list.get(list.size() - 1).equals("!!")) {
@@ -94,19 +99,19 @@ public class SimpleShell {
                     pb.command(list);
                 }
 
-                // // wait, wait, what curiousness is this?
-                // Process process = pb.start();
+                 // wait, wait, what curiousness is this?
+                 Process process = pb.start();
 
-                // //obtain the input stream
-                // InputStream is = process.getInputStream();
-                // InputStreamReader isr = new InputStreamReader(is);
-                // BufferedReader br = new BufferedReader(isr);
+                 //obtain the input stream
+                 InputStream is = process.getInputStream();
+                 InputStreamReader isr = new InputStreamReader(is);
+                 BufferedReader br = new BufferedReader(isr);
 
-                // //read output of the process
-                // String line;
-                // while ((line = br.readLine()) != null)
-                //     System.out.println(line);
-                // br.close();
+                 //read output of the process
+                 String line;
+                 while ((line = br.readLine()) != null)
+                     System.out.println(line);
+                 br.close();
 
 
             }
