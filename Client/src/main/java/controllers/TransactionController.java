@@ -4,12 +4,17 @@ import models.Id;
 
 import javax.json.JsonObject;
 import javax.json.stream.JsonParser;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.SQLOutput;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import models.Message;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,67 +23,20 @@ import org.json.simple.parser.JSONParser;
 public class TransactionController {
     private String rootURL = "http://zipcode.rocks:8085";
 
-    private MessageController msgCtrl;
-    private IdController idCtrl;
+    private MessageController msgCtrl = new MessageController();
+    private IdController idCtrl =  new IdController();
     List<JSONObject> user = new ArrayList<>();
     List<JSONObject> messages = new ArrayList<>();
     private StringBuilder informationStringUsers;
     private StringBuilder informationStringMessages;
     StringBuilder informationString;
-    URL urlID = new URL(rootURL + "/ids");
-    URL urlMessages = new URL("http://zipcode.rocks:8085/messages");
 
-    {
-        try {
-            URL url = urlID;
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.connect();
-
-            int responseCode = conn.getResponseCode();
-
-            if(responseCode != 200){
-                throw new RuntimeException("HttpResponseCode: " + responseCode);
-            } else {
-                informationString = new StringBuilder();
-
-                informationStringUsers = new StringBuilder();
-
-                informationStringMessages = new StringBuilder();
-
-                Scanner scanner = new Scanner(urlID.openStream());
-
-                while(scanner.hasNext()) {
-                    informationString.append(scanner.nextLine());
-                }
-
-                scanner.close();
-                scanner = new Scanner(urlMessages.openStream());
-
-                while(scanner.hasNext()){
-                    informationStringMessages.append(scanner.nextLine());
-                }
-                scanner.close();
-
-                JSONParser parse = new JSONParser();
-                JSONArray dataObject = (JSONArray) parse.parse(String.valueOf(informationString));
-
-                JSONArray dataObject2 = (JSONArray) parse.parse(String.valueOf(informationStringMessages));
-
-                for(Object o : dataObject) {
-                    user.add((JSONObject) o);
-                }
-                for(Object i : dataObject2) {
-                    messages.add((JSONObject) i);
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public TransactionController(MessageController m, IdController j) throws MalformedURLException {
+    }
+
+    public TransactionController() {
+
     }
 
     public List<Id> getIds() {
@@ -89,6 +47,22 @@ public class TransactionController {
         Id tid = new Id(idtoRegister, githubName);
         tid = idCtrl.postId(tid);
         return ("Id registered.");
+
+    }
+
+    public String postMessage(Id myId, Id toId, Message msg){
+        return msgCtrl.postMessage(myId, toId, msg.getMessage()).getMessage();
+    }
+
+    public String putId(Id id){
+        idCtrl.putId(id);
+        return ("Put the ID");
+
+    }
+
+    public String getMessage(){
+        return msgCtrl.getMessages().toString();
+
     }
 
     public String makecall(String s, String get, String s1) {
@@ -111,5 +85,20 @@ public class TransactionController {
             }
         }
         return output;
+    }
+
+    public String sendMessage(Id myId, Id toId, String msgs) {
+        return msgCtrl.postMessage(myId, toId, msgs).toString();
+    }
+
+    public String sendMessage(Id myId, String msg) {
+        return msgCtrl.postMessage(myId, null, msg).toString();
+    }
+    public Id getIdFromGitHub(String github) throws IOException, ParseException {
+        return idCtrl.getIdFromGitHub(github);
+    }
+
+    public String getGitHubFromName(String name) throws IOException, ParseException {
+        return idCtrl.getGitHubFromName(name);
     }
 }
