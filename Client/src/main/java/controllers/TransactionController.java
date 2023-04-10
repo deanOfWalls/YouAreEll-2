@@ -60,31 +60,37 @@ public class TransactionController {
 
     }
 
-    public String getMessage(){
-        return msgCtrl.getMessages().toString();
-
+    public String getMessages() throws IOException, ParseException {
+        // Last 20 messages
+        ArrayList<Message> messages = msgCtrl.getMessages();
+        StringBuilder output = new StringBuilder();
+        int num = 19;
+        if (num > messages.size()) {
+            num = messages.size();
+        }
+        for (int i = num; i >= 0; i--) {
+            output.append(messages.get(i)).append("\n");
+        }
+        return output.substring(0, output.length() - 1);
     }
 
-    public String makecall(String s, String get, String s1) {
-        String output = "";
-        if(s.equals("/ids")){
-            for(JSONObject z : user){
-                output += z.get("userid") + "\n";
+    public String makeCall(String s, String get, String s1) throws IOException, ParseException {
+        ArrayList<Id> ids = idCtrl.getIds();
+        StringBuilder output = new StringBuilder();
+        if(s.equals("/ids")) {
+            for (Id id : ids) {
+                output.append(id.getGithub()).append("\n");
             }
-        } else if(s.equals("/name")){
-            for(JSONObject z : user){
-                output += z.get("name") + "\n";
+        } else if (s.equals("/name")) {
+            for (Id id : ids) {
+                output.append(id.getName()).append("\n");
             }
-        } else if (s.equals("/github")){
-            for(JSONObject z : user){
-                output += z.get("github") + "\n";
-            }
-        } else if (s.equals("/messages")){
-            for(JSONObject z : messages){
-                output += z.get("message") + "\n";
-            }
+        } else if (s.equals("/messages")) {
+            output.append(getMessages());
+        } else {
+            System.err.print("lol"); System.exit(0);
         }
-        return output;
+        return output.substring(0, output.length() - 1);
     }
 
     public String sendMessage(Id myId, Id toId, String msgs) {
@@ -100,5 +106,29 @@ public class TransactionController {
 
     public String getGitHubFromName(String name) throws IOException, ParseException {
         return idCtrl.getGitHubFromName(name);
+    }
+
+    public String putId(String name, String githubName) {
+        Id id = new Id(name, githubName);
+        idCtrl.putId(id);
+        return ("Id Put. Random id generated.");
+    }
+    public String putId(String idtoRegister, String name, String githubName) {
+        Id id = new Id(idtoRegister, name, githubName);
+        idCtrl.putId(id);
+        return ("Id Put.");
+    }
+    public String getMessages(Id id) throws IOException, ParseException {
+        // Last 20 messages
+        ArrayList<Message> messages = msgCtrl.getMessagesForId(id);
+        StringBuilder output = new StringBuilder();
+        int num = 19;
+        if (num > messages.size()) {
+            num = messages.size() - 1;
+        }
+        for (int i = num; i >= 0; i--) {
+            output.append(messages.get(i)).append("\n");
+        }
+        return output.substring(0, output.length() - 1);
     }
 }

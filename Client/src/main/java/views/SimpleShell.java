@@ -72,11 +72,18 @@ public class SimpleShell {
 
                 // ids
                 if (list.contains("ids")) {
-                    String results = urll.get_ids();
-                    SimpleShell.prettyPrint(results);
-                    urll.postID("sugarpoppy hiep", "hiepnguyen90");
+                    // if list has 3 words
+                    if (list.size() >= 3) {
+                        urll.put_id(list.get(1), list.get(2));
+                    } else if (list.size() > 1) {
+                        SimpleShell.prettyPrint("To add a user, please type: \"ids your_name your_github_id\"");
+                    } else {
+                        String results = urll.get_ids();
+                        SimpleShell.prettyPrint(results);
+                    }
                     continue;
                 }
+
 
                 // messages
                 if (list.contains("messages")) {

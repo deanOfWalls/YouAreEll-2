@@ -35,14 +35,14 @@ public class YouAreEll {
         System.out.println(urlhandler.MakeURLCall("/messages", "GET", ""));
     }
 
-    public String get_ids() { //
-        return tt.makecall("/ids", "GET", "");
+    public String get_ids() throws IOException, ParseException { //
+        return tt.makeCall("/ids", "GET", "");
     }
 
-    public String get_messages() throws MalformedURLException {
+    public String get_messages() throws IOException, ParseException {
 //        return MakeURLCall("/messages", "GET", "");
         URL url = new URL("http://zipcode.rocks:8085/%22");
-        return tt.getMessage();
+        return tt.getMessages();
     }
 
     public String postID(String idtoRegister, String githubName){
@@ -68,5 +68,12 @@ public class YouAreEll {
 
     public String getGitHubFromName(String name) throws IOException, ParseException {
         return tt.getGitHubFromName(name);
+    }
+    public String post_id(String name, String github) {
+        return tt.postId(name, github);
+    }
+
+    public String put_id(String name, String github) {
+        return tt.putId(name, github);
     }
 }
